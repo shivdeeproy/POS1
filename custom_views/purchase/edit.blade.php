@@ -540,8 +540,10 @@
   <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
   <script type="text/javascript">
     $(document).ready( function(){
+     setTimeout(function(){
       update_table_total();
       update_grand_total();
+     },1000)
       __page_leave_confirmation('#add_purchase_form');
     });
   </script>

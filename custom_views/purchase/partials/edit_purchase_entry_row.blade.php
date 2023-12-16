@@ -7,6 +7,8 @@
     $quantity_precision = session('business.quantity_precision', 2);
 @endphp
 <div class="table-responsive">
+    <input type="hidden" name="total_without_gst">
+<input type="hidden" name="total_gst">
     <table class="table table-condensed table-bordered table-th-green text-center table-striped" 
     id="purchase_entry_table">
         <thead>
@@ -14,6 +16,7 @@
                 <th>#</th>
                 <th>@lang( 'product.product_name' )</th>
                 <th>@if(empty($is_purchase_order)) @lang( 'purchase.purchase_quantity' ) @else @lang( 'lang_v1.order_quantity' ) @endif</th>
+                <th>@lang('purchase.mrp_inc_tax')</th>
                 <th>@lang( 'lang_v1.unit_cost_before_discount' )</th>
                 <th>@lang( 'lang_v1.discount_percent' )</th>
                 <th>@lang( 'purchase.unit_cost_before_tax' )</th>
@@ -24,6 +27,7 @@
                 <th class="@if(!session('business.enable_editing_product_from_purchase') || !empty($is_purchase_order)) hide @endif">
                     @lang( 'lang_v1.profit_margin' )
                 </th>
+                <th>@lang( 'purchase.discount_on_mrp' )</th>
                 @if(empty($is_purchase_order))
                     <th>@lang( 'purchase.unit_selling_price') <small>(@lang('product.inc_of_tax'))</small></th>
                     @if(session('business.enable_lot_number'))
@@ -122,6 +126,7 @@
                     required>
                 @endif
             </td>
+            <td>{!! Form::text('purchases['.$loop->index.'][mrp_inc_tax]',$purchase_line->mrp_inc_tax,['class'=>'form-control input-sm mrp_inc_tax input number mousetrap']) !!}</td>
             <td>
                 {!! Form::text('purchases[' . $loop->index . '][pp_without_discount]', number_format($purchase_line->pp_without_discount/$purchase->exchange_rate, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), ['class' => 'form-control input-sm purchase_unit_cost_without_discount input_number', 'required']); !!}
             </td>
@@ -182,6 +187,9 @@
                 number_format($profit_percent, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), 
                 ['class' => 'form-control input-sm input_number profit_percent', 'required']); !!}
             </td>
+              <td class="">
+            {!! Form::text('purchases[' . $loop->index . '][discount_on_mrp]', number_format($purchase_line->discount_on_mrp, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), ['class' => 'form-control input-sm input_number discount', 'required']); !!}
+        </td>
             @if(empty($is_purchase_order))
             <td>
                 @if(session('business.enable_editing_product_from_purchase'))
@@ -253,6 +261,7 @@
         <?php $row_count = $loop->index + 1 ; ?>
     @endforeach
         </tbody>
+        <tfoot></tfoot>
     </table>
 </div>
 <input type="hidden" id="row_count" value="{{ $row_count }}">

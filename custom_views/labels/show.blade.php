@@ -187,43 +187,7 @@
 										value="12">
 								</div>
 							@endif
-						</td>						
-					</tr>
-					<tr>
-						
-						@php
-							$c = 0;
-							$custom_labels = json_decode(session('business.custom_labels'), true);
-        					$product_custom_fields = !empty($custom_labels['product']) ? $custom_labels['product'] : [];
-							 $product_cf_details = !empty($custom_labels['product_cf_details']) ? $custom_labels['product_cf_details'] : [];
-						@endphp
-						@foreach($product_custom_fields as $index => $cf)
-							@if(!empty($cf))
-								@php
-									$field_name = 'product_custom_field' . $loop->iteration;
-									$cf_type = !empty($product_cf_details[$loop->iteration]['type']) ? $product_cf_details[$loop->iteration]['type'] : 'text';
-									$dropdown = !empty($product_cf_details[$loop->iteration]['dropdown_options']) ? explode(PHP_EOL, $product_cf_details[$loop->iteration]['dropdown_options']) : [];
-									$c++;
-								@endphp
-								<td>
-									<div class="checkbox">
-										<label>
-											<input type="checkbox" name="print[{{ $field_name }}]" value="1"> <b>{{ $cf }}</b>
-										</label>
-									</div>
-
-									<div class="input-group">
-									<div class="input-group-addon"><b>@lang( 'lang_v1.size' )</b></div>
-										<input type="text" class="form-control" 
-											name="print[{{ $field_name }}_size]" 
-											value="12">
-									</div>
-								</td>
-								@if ($c % 4 == 0)
-									</tr>
-								@endif
-							@endif
-						@endforeach
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -244,6 +208,16 @@
 							<i class="fa fa-cog"></i>
 						</span>
 						{!! Form::select('barcode_setting', $barcode_settings, !empty($default) ? $default->id : null, ['class' => 'form-control']); !!}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-4">
+				<div class="form-group">
+					{!! Form::label('show_sale_price', @trans( 'barcode.show_sale_price' ) . ':') !!}
+					<div class="">
+						
+					<input type="checkbox" value="1" checked name="print[show_sale_price]" style="width:10%;height: 25px;">
 					</div>
 				</div>
 			</div>

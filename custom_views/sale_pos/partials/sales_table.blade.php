@@ -12,6 +12,8 @@
             <th>@lang('sale.location')</th>
             <th>@lang('sale.payment_status')</th>
             <th>@lang('lang_v1.payment_method')</th>
+            <th>@lang('sale.total_amount_exc_tax')</th>
+            <th>@lang('sale.total_tax')</th>
             <th>@lang('sale.total_amount')</th>
             <th>@lang('sale.total_paid')</th>
             <th>@lang('lang_v1.sell_due')</th>
@@ -33,6 +35,8 @@
             <td colspan="6"><strong>@lang('sale.total'):</strong></td>
             <td class="footer_payment_status_count"></td>
             <td class="payment_method_count"></td>
+            <td class="footer_total_before_tax_amount"></td>
+            <td class="footer_total_tax_amount"></td> 
             <td class="footer_sale_total"></td>
             <td class="footer_total_paid"></td>
             <td class="footer_total_remaining"></td>

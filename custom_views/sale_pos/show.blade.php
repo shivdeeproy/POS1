@@ -211,7 +211,20 @@
     <div class="row">
       @php
         $total_paid = 0;
-      @endphp
+
+        $total_without_any_tax=$sell->total_before_tax;
+        $tatal_sum_tax=0;
+       if($sell->type!='sales_order'):
+        $total_without_any_tax=0;
+         foreach($sell->sell_lines as $sell_line):
+         $total_without_any_tax+=$sell_line->unit_price*$sell_line->quantity;
+        $tatal_sum_tax+=$sell_line->item_tax*$sell_line->quantity;
+            endforeach;
+            endif;
+
+            @endphp
+
+            
       @if($sell->type != 'sales_order')
       <div class="col-sm-12 col-xs-12">
         <h4>{{ __('sale.payment_info') }}:</h4>
@@ -265,7 +278,7 @@
             <tr>
               <th>{{ __('sale.total') }}: </th>
               <td></td>
-              <td><span class="display_currency pull-right" data-currency_symbol="true">{{ $sell->total_before_tax }}</span></td>
+              <td><span class="display_currency pull-right" data-currency_symbol="true">{{ $total_without_any_tax }}</span></td>
             </tr>
             <tr>
               <th>{{ __('sale.discount') }}:</th>
@@ -314,6 +327,17 @@
               </td>
             </tr>
             @endif
+
+             <tr>
+              <th>{{ __('lang_v1.total_tax') }}:</th>
+              <td></td>
+              <td class="text-right">
+              <span class="display_currency pull-right" data-currency_symbol="true">{{ $tatal_sum_tax }}</span><br>
+               
+              </td>
+            </tr>
+      
+
             <tr>
               <th>{{ __('sale.shipping') }}: @if($sell->shipping_details)({{$sell->shipping_details}}) @endif</th>
               <td><b>(+)</b></td>

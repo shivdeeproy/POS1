@@ -251,12 +251,15 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="table-responsive">
+					<input type="hidden" name="total_without_gst">
+					<input type="hidden" name="total_gst">
 					<table class="table table-condensed table-bordered table-th-green text-center table-striped" id="purchase_entry_table">
 						<thead>
 							<tr>
 								<th>#</th>
 								<th>@lang( 'product.product_name' )</th>
 								<th>@lang( 'purchase.purchase_quantity' )</th>
+								<th>@lang('purchase.mrp_inc_tax')</th>
 								<th>@lang( 'lang_v1.unit_cost_before_discount' )</th>
 								<th>@lang( 'lang_v1.discount_percent' )</th>
 								<th>@lang( 'purchase.unit_cost_before_tax' )</th>
@@ -267,6 +270,7 @@
 								<th class="@if(!session('business.enable_editing_product_from_purchase')) hide @endif">
 									@lang( 'lang_v1.profit_margin' )
 								</th>
+								<th>@lang( 'purchase.discount_on_mrp' )</th>
 								<th>
 									@lang( 'purchase.unit_selling_price' )
 									<small>(@lang('product.inc_of_tax'))</small>
@@ -285,6 +289,7 @@
 							</tr>
 						</thead>
 						<tbody></tbody>
+						<tfoot></tfoot>
 					</table>
 				</div>
 				<hr/>

@@ -157,6 +157,7 @@
               <th class="no-print text-right">@lang('purchase.unit_cost_before_tax')</th>
               <th class="no-print text-right">@lang('purchase.subtotal_before_tax')</th>
               <th class="text-right">@lang('sale.tax')</th>
+              <th class="text-right">@lang('sale.total_tax')</th>
               <th class="text-right">@lang('purchase.unit_cost_after_tax')</th>
               @if($purchase->type != 'purchase_order')
               @if(session('business.enable_lot_number'))
@@ -170,8 +171,9 @@
               <th class="text-right">@lang('sale.subtotal')</th>
             </tr>
           </thead>
-          @php 
+        @php 
             $total_before_tax = 0.00;
+            $totalArray['items_tax']=0;
           @endphp
           @foreach($purchase->purchase_lines as $purchase_line)
             <tr>
@@ -208,6 +210,34 @@
               <td class="no-print text-right"><span class="display_currency" data-currency_symbol="true">{{ $purchase_line->purchase_price }}</span></td>
               <td class="no-print text-right"><span class="display_currency" data-currency_symbol="true">{{ $purchase_line->quantity * $purchase_line->purchase_price }}</span></td>
               <td class="text-right"><span class="display_currency" data-currency_symbol="true">{{ $purchase_line->item_tax }} </span> <br/><small>@if(!empty($taxes[$purchase_line->tax_id])) ( {{ $taxes[$purchase_line->tax_id]}} ) </small>@endif</td>
+
+              @php 
+              if(isset($tax_lines_array[$purchase_line->tax_id])):
+              $tax_lines_array[$purchase_line->tax_id]['amount']+=$purchase_line->item_tax;
+              else:
+
+                if(isset($purchase_line->tax->sub_taxes) && count($purchase_line->tax->sub_taxes)):
+
+                 $details = [];
+                 $sub_taxes=$purchase_line->tax->sub_taxes;
+                 foreach ($sub_taxes as $sub_tax) {
+                $details[] = [
+                    'id' => $sub_tax->id,
+                    'name' => $sub_tax->name,
+                    'amount' => $sub_tax->amount,
+                ];
+            }
+               $tax_lines_array[$purchase_line->tax_id]['detail']=$details;
+                else:
+                endif;
+              if($purchase_line->tax_id):
+              $tax_lines_array[$purchase_line->tax_id]['name']=$taxes[$purchase_line->tax_id];
+              $tax_lines_array[$purchase_line->tax_id]['amount']=$purchase_line->item_tax;
+              endif;
+              endif;
+              @endphp 
+
+                <td class="text-right"><span class="display_currency" data-currency_symbol="true">{{$purchase_line->quantity*$purchase_line->item_tax}}</span></td>
               <td class="text-right"><span class="display_currency" data-currency_symbol="true">{{ $purchase_line->purchase_price_inc_tax }}</span></td>
               @if($purchase->type != 'purchase_order')
               @if(session('business.enable_lot_number'))
@@ -229,10 +259,18 @@
               @endif
               <td class="text-right"><span class="display_currency" data-currency_symbol="true">{{ $purchase_line->purchase_price_inc_tax * $purchase_line->quantity }}</span></td>
             </tr>
-            @php 
+             @php 
               $total_before_tax += ($purchase_line->quantity * $purchase_line->purchase_price);
+              $totalArray['items_tax']+=$purchase_line->quantity*$purchase_line->item_tax;
             @endphp
           @endforeach
+          <tr rowspan="2">
+            <td colspan="7"></td>
+            <td></td>
+            <td class="text-right">Total Tax:</td>
+            <td><span class="display_currency" data-currency_symbol="true">{{$totalArray['items_tax']}}</span></td>
+            <td colspan="4"></td>
+          </tr>
         </table>
       </div>
     </div>
@@ -372,6 +410,34 @@
         </table>
       </div>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6"></div>
+     <div class="col-sm-6">
+      <strong>@lang('purchase.purchase_line_taxes'):</strong><br>
+      <p class="well well-sm no-shadow bg-gray">
+        @foreach($tax_lines_array as $tax_line_row)
+
+        {{$tax_line_row['name']}}
+          @if(isset($tax_line_row['detail']))
+          (
+          @foreach($tax_line_row['detail'] as $itIndex=> $detail)
+          @if(count($tax_line_row['detail'])==$itIndex+1)
+          {{$detail['name'].'%  '}}
+         @else
+          {{$detail['name'].'% +'}}
+          @endif
+          @endforeach
+          )
+          @endif
+
+      <span>  - </span>  <span class="display_currency pull-right" data-currency_symbol="true" >{{ $tax_line_row['amount'] }}</span>
+        <br>
+        @endforeach
+
+      </p>
+    </div>
+
   </div>
   <div class="row">
     <div class="col-sm-6">

@@ -17,6 +17,10 @@
     <td>
         <input type="hidden" name="products[{{$row_index}}][product_id]" class="form-control product_id" value="{{$product->product_id}}">
 
+         <input type="hidden" name="products[{{$row_index}}][item_tax]" class="form-control" value="{{$product->last_purchased_price-$product->last_purchased_price_exc_tax}}">
+
+           <input type="hidden" name="products[{{$row_index}}][tax_id]" class="form-control" value="{{$product->last_purchased_tax_id}}">
+
         <input type="hidden" value="{{$product->variation_id}}" 
             name="products[{{$row_index}}][variation_id]">
 

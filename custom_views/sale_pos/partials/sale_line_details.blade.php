@@ -17,14 +17,18 @@
         <th>{{ __('sale.unit_price') }}</th>
         <th>{{ __('sale.discount') }}</th>
         <th>{{ __('sale.tax') }}</th>
+        <th>{{ __('sale.total_amount_exc_tax') }}</th>
+        <th>{{ __('sale.total_tax') }}</th>
         <th>{{ __('sale.price_inc_tax') }}</th>
         <th>{{ __('sale.subtotal') }}</th>
     </tr>
+    @php $tt_without_tax=0; @endphp
+    
     @foreach($sell->sell_lines as $sell_line)
         <tr>
             <td>{{ $loop->iteration }}</td>
             <td>
-                {{ $sell_line->product->name }}
+                {{ $sell_line->product->name??'' }}
                 @if( $sell_line->product->type == 'variable')
                 - {{ $sell_line->variations->product_variation->name ?? ''}}
                 - {{ $sell_line->variations->name ?? ''}},
@@ -108,6 +112,14 @@
                 @if(!empty($taxes[$sell_line->tax_id]))
                 ( {{ $taxes[$sell_line->tax_id]}} )
                 @endif
+            </td>
+            @php
+
+             $tt_without_tax+=$sell_line->unit_price*$sell_line->quantity;
+
+             @endphp
+              <td><span class="display_currency" data-currency_symbol="true">{{$sell_line->unit_price*$sell_line->quantity}}</span></td>
+            <td><span class="display_currency" data-currency_symbol="true">{{$sell_line->item_tax*$sell_line->quantity}}</span>
             </td>
             <td>
                 @if(!empty($for_ledger))

@@ -105,6 +105,10 @@
                 { data: 'location_name', name: 'BS.name'},
                 { data: 'name', name: 'contacts.name'},
                 { data: 'payment_status', name: 'payment_status'},
+
+                { data: 'total_without_tax', name: 'total_without_tax'},
+                { data: 'total_tax', name: 'total_tax'},
+
                 { data: 'final_total', name: 'final_total'},
                 { data: 'payment_due', name: 'payment_due'},
                 { data: 'action', name: 'action'}
@@ -117,6 +121,12 @@
 
                 var total_due = sum_table_col($('#purchase_return_datatable'), 'payment_due');
                 $('#footer_total_due').text(total_due);
+
+                var total_without_tax = sum_table_col($('#purchase_return_datatable'), 'total_without_tax');
+                $('#footer_total_without_tax').text(total_without_tax);
+
+                 var total_tax = sum_table_col($('#purchase_return_datatable'), 'total_tax');
+                $('#footer_total_tax').text(total_tax);
                 
                 __currency_convert_recursively($('#purchase_return_datatable'));
             },

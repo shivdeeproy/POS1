@@ -258,6 +258,9 @@
         input_tax_table = $('#input_tax_table').DataTable({
             processing: true,
             serverSide: true,
+               scrollY: "75vh",
+        scrollX:        true,
+        scrollCollapse: true,
             ajax: {
                 url: '/reports/tax-details',
                 data: function(d) {
@@ -308,6 +311,9 @@
                     output_tax_datatable = $('#output_tax_table').DataTable({
                         processing: true,
                         serverSide: true,
+                           scrollY: "75vh",
+        scrollX:        true,
+        scrollCollapse: true,
                         aaSorting: [[0, 'desc']],
                         ajax: {
                             url: '/reports/tax-details',
@@ -358,6 +364,9 @@
                     expense_tax_datatable = $('#expense_tax_table').DataTable({
                         processing: true,
                         serverSide: true,
+                           scrollY: "75vh",
+        scrollX:        true,
+        scrollCollapse: true,
                         ajax: {
                             url: '/reports/tax-details',
                             data: function(d) {

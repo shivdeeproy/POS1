@@ -88,6 +88,10 @@
                 required>
             @endif
         </td>
+        <td>{!! Form::text('purchases['.$row_count.'][mrp_inc_tax]',$variation->mrp_inc_tax,['class'=>'form-control input-sm mrp_inc_tax input number mousetrap']) !!}
+            {!! Form::hidden('purchases['.$row_count.'][mrp_exc_tax]',$variation->mrp_exc_tax,['class'=>'form-control input-sm mrp_exc_tax input number mousetrap']) !!}
+
+        </td>
         <td>
             @php
                 $pp_without_discount = !empty($purchase_order_line) ? $purchase_order_line->pp_without_discount/$purchase_order->exchange_rate : $variation->default_purchase_price;
@@ -163,6 +167,9 @@
         </td>
         <td class="@if(!session('business.enable_editing_product_from_purchase') || !empty($is_purchase_order)) hide @endif">
             {!! Form::text('purchases[' . $row_count . '][profit_percent]', number_format($variation->profit_percent, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), ['class' => 'form-control input-sm input_number profit_percent', 'required']); !!}
+        </td>
+         <td class="">
+            {!! Form::text('purchases[' . $row_count . '][discount_on_mrp]', number_format($variation->discount, $currency_precision, $currency_details->decimal_separator, $currency_details->thousand_separator), ['class' => 'form-control input-sm input_number discount', 'required']); !!}
         </td>
         @if(empty($is_purchase_order))
         <td>

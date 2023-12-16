@@ -159,9 +159,12 @@
 			</div>
 			<br>
 			<div class="row">
-				<div class="col-sm-12">
-					<button type="submit" class="btn btn-primary pull-right">@lang('messages.save')</button>
+				<div class="col-sm-12 text-right">
+					<button type="submit" class="btn btn-primary">@lang('messages.save')</button>
+					<input type="submit" name="save_and_credit" class="btn btn-primary mr-3" value="@lang('messages.save_and_credit_note')"/>
+
 				</div>
+
 			</div>
 		</div>
 	</div>

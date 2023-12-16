@@ -51,12 +51,15 @@
                   <th>@lang('product.product_name')</th>
                   <th>@lang('sale.unit_price')</th>
                   <th>@lang('lang_v1.return_quantity')</th>
+                  <th>@lang('lang_v1.total_without_tax')</th>
+                  <th>@lang('lang_v1.tax')</th>
                   <th>@lang('lang_v1.return_subtotal')</th>
               </tr>
           </thead>
           <tbody>
               @php
                 $total_before_tax = 0;
+                $tt_tax=0;
               @endphp
               @foreach($purchase->purchase_lines as $purchase_line)
               @if($purchase_line->quantity_returned == 0)
@@ -69,6 +72,67 @@
                   $unit_name = $purchase_line->sub_unit->short_name;
                 }
               @endphp
+
+               @php 
+
+                          if(!$purchase_line->tax_id):
+
+                         $total_without_tax=$purchase_line->purchase_price_inc_tax* $purchase_line->quantity_returned;
+
+                         $item_tax=0.00;
+
+                     else:
+
+                        $tax_amount=$purchase_line->line_tax->amount;
+
+                        $item_tax=$tax_amount*$purchase_line->purchase_price_inc_tax/100;
+
+                     $total_without_tax= ($purchase_line->purchase_price_inc_tax-$item_tax) * $purchase_line->quantity_returned; 
+ 
+                    endif;
+
+                         @endphp
+
+              @php 
+
+              if(isset($tax_lines_array[$purchase_line->tax_id])):
+
+              $tax_lines_array[$purchase_line->tax_id]['amount']+=$item_tax*$purchase_line->quantity_returned;
+
+              else:
+
+                if(isset($purchase_line->tax->sub_taxes) && count($purchase_line->tax->sub_taxes)):
+
+                 $details = [];
+                 $sub_taxes=$purchase_line->tax->sub_taxes;
+                 foreach ($sub_taxes as $sub_tax) {
+                $details[] = [
+                    'id' => $sub_tax->id,
+                    'name' => $sub_tax->name,
+                    'amount' => $sub_tax->amount,
+                ];
+            }
+
+               $tax_lines_array[$purchase_line->tax_id]['detail']=$details;
+
+                else:
+
+                endif;
+
+              if($purchase_line->tax_id):
+
+              $tax_lines_array[$purchase_line->tax_id]['name']=$taxes[$purchase_line->tax_id];
+
+              $tax_lines_array[$purchase_line->tax_id]['amount']=$item_tax*$purchase_line->quantity_returned;
+
+              endif;
+
+              endif;
+
+              $tt_tax+=$item_tax*$purchase_line->quantity_returned;
+
+              @endphp 
+
               <tr>
                   <td>{{ $loop->iteration }}</td>
                   <td>
@@ -80,10 +144,16 @@
                   </td>
                   <td><span class="display_currency" data-currency_symbol="true">{{ $purchase_line->purchase_price_inc_tax }}</span></td>
                   <td>{{@format_quantity($purchase_line->quantity_returned)}} {{$unit_name}}</td>
+
+                  <td>
+                 <span class="display_currency" data-currency_symbol="true">{{$total_without_tax}}</span>
+                  </td>
+
+                   <td class=""><span class="display_currency" data-currency_symbol="true">{{ $item_tax }} </span> <br/><small>@if(!empty($taxes[$purchase_line->tax_id])) ( {{ $taxes[$purchase_line->tax_id]}} ) </small>@endif</td>
                   <td>
                     @php
                       $line_total = $purchase_line->purchase_price_inc_tax * $purchase_line->quantity_returned;
-                      $total_before_tax += $line_total ;
+                      $total_before_tax += $total_without_tax ;
                     @endphp
                     <span class="display_currency" data-currency_symbol="true">{{$line_total}}</span>
                   </td>
@@ -115,6 +185,14 @@
                 @endif
               </td>
           </tr>
+
+           <tr>
+            <th>@lang('lang_v1.total_tax'):</th>
+            <td></td>
+                       <td><span class="display_currency pull-right" data-currency_symbol="true">{{ $tt_tax }}</span></td>
+
+          </tr>
+
           <tr>
             <th>@lang('lang_v1.return_total'):</th>
             <td></td>
@@ -123,6 +201,46 @@
         </table>
       </div>
     </div>
+    @if(isset($tax_lines_array))
+     <div class="row" style="display:flex;justify-content:end;">
+    
+     <div class="col-sm-6 well well-sm no-shadow bg-gray text-left">
+  
+        <div class="col-md-2">
+      <strong>@lang('purchase.line_taxes'):</strong></div>
+       <div class="col-md-10">
+
+        @foreach($tax_lines_array as $tax_line_row)
+
+        {{$tax_line_row['name']}}
+          @if(isset($tax_line_row['detail']))
+
+          (
+
+          @foreach($tax_line_row['detail'] as $itIndex=> $detail)
+
+          @if(count($tax_line_row['detail'])==$itIndex+1)
+
+          {{$detail['name'].'%  '}}
+
+         @else
+
+          {{$detail['name'].'% +'}}
+
+          @endif
+          @endforeach
+
+          )
+          @endif
+
+      <span>  - </span>  <span class="display_currency pull-right" data-currency_symbol="true" >{{ $tax_line_row['amount'] }}</span>
+        <br>
+        @endforeach
+      </div>
+
+     </div>
+    </div>
+    @endif
     <div class="row">
       <div class="col-md-12">
             <strong>{{ __('lang_v1.activities') }}:</strong><br>

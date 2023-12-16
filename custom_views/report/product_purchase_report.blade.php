@@ -81,17 +81,25 @@
                                 <th>@lang('messages.date')</th>
                                 <th>@lang('sale.qty')</th>
                                 <th>@lang('lang_v1.total_unit_adjusted')</th>
-                                <th>@lang('lang_v1.unit_perchase_price')</th>
+                                   <th>@lang('sale.tax_percent')</th>
+                                <th>@lang('sale.unit_price_without_tax')</th>
+                                <th>@lang('sale.tax')</th>
+
+
+                                <!-- <th>@lang('lang_v1.unit_perchase_price')</th> -->
+                                <th>@lang('sale.selling_price_inc_tax')</th>
+
                                 <th>@lang('sale.subtotal')</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr class="bg-gray font-17 footer-total text-center">
                                 <td colspan="5"><strong>@lang('sale.total'):</strong></td>
-                                <td id="footer_total_purchase"></td>
-                                <td id="footer_total_adjusted"></td>
+                                <td class="footer_total_purchase"></td>
+                                <td class="footer_total_adjusted"></td>
                                 <td></td>
-                                <td><span class="display_currency" id="footer_subtotal" data-currency_symbol ="true"></span></td>
+                                <td colspan="3"></td>
+                                <td><span class="display_currency footer_subtotal" id="footer_subtotal" data-currency_symbol ="true"></span></td>
                             </tr>
                         </tfoot>
                     </table>

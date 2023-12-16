@@ -221,8 +221,14 @@
 					<th class="tex-center @if(!empty($pos_settings['inline_service_staff'])) col-md-3 @else col-md-4 @endif">	
 						@lang('sale.product') @show_tooltip(__('lang_v1.tooltip_sell_product_column'))
 					</th>
-					<th class="text-center col-md-3">
+					<th class="text-center col-md-2">
 						@lang('sale.qty')
+					</th>
+					<th class="text-center col-md-2">
+						@lang('sale.default_mrp')
+					</th>
+					<th class="text-center col-md-2">
+						@lang('sale.discount')
 					</th>
 					@if(!empty($pos_settings['inline_service_staff']))
 						<th class="text-center col-md-2">

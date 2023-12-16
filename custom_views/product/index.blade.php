@@ -213,6 +213,8 @@
                         { data: 'brand', name: 'brands.name'},
                         { data: 'tax', name: 'tax_rates.name', searchable: false},
                         { data: 'sku', name: 'products.sku'},
+                        { data: 'unit_default_price', name: 'unit_default_price',searchable:false},
+                        { data: 'mrp_default_price', name: 'mrp_default_price',searchable:false},
                         { data: 'product_custom_field1', name: 'products.product_custom_field1', visible: $('#cf_1').text().length > 0  },
                         { data: 'product_custom_field2', name: 'products.product_custom_field2' , visible: $('#cf_2').text().length > 0},
                         { data: 'product_custom_field3', name: 'products.product_custom_field3', visible: $('#cf_3').text().length > 0},
