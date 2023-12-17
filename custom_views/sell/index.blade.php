@@ -47,6 +47,8 @@
                         <th>@lang('sale.location')</th>
                         <th>@lang('sale.payment_status')</th>
                         <th>@lang('lang_v1.payment_method')</th>
+                        <th>@lang('sale.total_amount_exc_tax')</th>
+                        <th>@lang('sale.total_tax')</th>
                         <th>@lang('sale.total_amount')</th>
                         <th>@lang('sale.total_paid')</th>
                         <th>@lang('lang_v1.sell_due')</th>
@@ -73,10 +75,13 @@
                         <td colspan="6"><strong>@lang('sale.total'):</strong></td>
                         <td class="footer_payment_status_count"></td>
                         <td class="payment_method_count"></td>
+                        <td class="footer_total_before_tax_amount"></td>
+                        <td class="footer_total_tax_amount"></td> 
                         <td class="footer_sale_total"></td>
                         <td class="footer_total_paid"></td>
                         <td class="footer_total_remaining"></td>
                         <td class="footer_total_sell_return_due"></td>
+                        <td colspan="2"></td>
                         <td colspan="2"></td>
                         <td class="service_type_count"></td>
                         <td colspan="7"></td>
@@ -166,6 +171,8 @@ $(document).ready( function(){
             { data: 'business_location', name: 'bl.name'},
             { data: 'payment_status', name: 'payment_status'},
             { data: 'payment_methods', orderable: false, "searchable": false},
+            { data: 'total_before_tax', name: 'total_before_tax', searchable: false},
+            { data: 'tax_amount', name: 'tax_amount', searchable: false},
             { data: 'final_total', name: 'final_total'},
             { data: 'total_paid', name: 'total_paid', "searchable": false},
             { data: 'total_remaining', name: 'total_remaining'},
@@ -193,11 +200,15 @@ $(document).ready( function(){
             var footer_total_paid = 0;
             var footer_total_remaining = 0;
             var footer_total_sell_return_due = 0;
+            var total_before_tax_amount = 0;
+            var total_tax_amount = 0;
             for (var r in data){
                 footer_sale_total += $(data[r].final_total).data('orig-value') ? parseFloat($(data[r].final_total).data('orig-value')) : 0;
                 footer_total_paid += $(data[r].total_paid).data('orig-value') ? parseFloat($(data[r].total_paid).data('orig-value')) : 0;
                 footer_total_remaining += $(data[r].total_remaining).data('orig-value') ? parseFloat($(data[r].total_remaining).data('orig-value')) : 0;
                 footer_total_sell_return_due += $(data[r].return_due).find('.sell_return_due').data('orig-value') ? parseFloat($(data[r].return_due).find('.sell_return_due').data('orig-value')) : 0;
+                total_before_tax_amount += $(data[r].total_before_tax).data('orig-value') ? parseFloat($(data[r].total_before_tax).data('orig-value')) : 0;
+                total_tax_amount += $(data[r].tax_amount).data('orig-value') ? parseFloat($(data[r].tax_amount).data('orig-value')) : 0;
             }
 
             $('.footer_total_sell_return_due').html(__currency_trans_from_en(footer_total_sell_return_due));
@@ -208,6 +219,8 @@ $(document).ready( function(){
             $('.footer_payment_status_count').html(__count_status(data, 'payment_status'));
             $('.service_type_count').html(__count_status(data, 'types_of_service_name'));
             $('.payment_method_count').html(__count_status(data, 'payment_methods'));
+            $('.footer_total_before_tax_amount').html(__currency_trans_from_en(total_before_tax_amount));
+            $('.footer_total_tax_amount').html(__currency_trans_from_en(total_tax_amount));
         },
         createdRow: function( row, data, dataIndex ) {
             $( row ).find('td:eq(6)').attr('class', 'clickable_td');
